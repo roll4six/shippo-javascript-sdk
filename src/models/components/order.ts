@@ -101,7 +101,7 @@ export type Order = {
   /**
    * <a href="#tag/Addresses">Address</a> object of the recipient / buyer. Will be returned expanded by default.
    */
-  toAddress: Address;
+  toAddress?: Address | undefined;
   /**
    * Array of <a href="#section/Line-Item">line item</a> objects representing the items in this order.
    *
@@ -150,30 +150,31 @@ export const Order$inboundSchema: z.ZodType<Order, z.ZodTypeDef, unknown> = z
     weight: z.string().optional(),
     weight_unit: WeightUnitEnum$inboundSchema.optional(),
     from_address: Address$inboundSchema.optional(),
-    to_address: Address$inboundSchema,
+    to_address: Address$inboundSchema.optional(),
     line_items: z.array(LineItem$inboundSchema).optional(),
     object_id: z.string().optional(),
     object_owner: z.string().optional(),
     shop_app: OrderShopAppEnum$inboundSchema.optional(),
     transactions: z.array(z.string()).optional(),
-  }).transform((v) => {
+  })
+  .transform((v) => {
     return remap$(v, {
-      "order_number": "orderNumber",
-      "order_status": "orderStatus",
-      "placed_at": "placedAt",
-      "shipping_cost": "shippingCost",
-      "shipping_cost_currency": "shippingCostCurrency",
-      "shipping_method": "shippingMethod",
-      "subtotal_price": "subtotalPrice",
-      "total_price": "totalPrice",
-      "total_tax": "totalTax",
-      "weight_unit": "weightUnit",
-      "from_address": "fromAddress",
-      "to_address": "toAddress",
-      "line_items": "lineItems",
-      "object_id": "objectId",
-      "object_owner": "objectOwner",
-      "shop_app": "shopApp",
+      order_number: "orderNumber",
+      order_status: "orderStatus",
+      placed_at: "placedAt",
+      shipping_cost: "shippingCost",
+      shipping_cost_currency: "shippingCostCurrency",
+      shipping_method: "shippingMethod",
+      subtotal_price: "subtotalPrice",
+      total_price: "totalPrice",
+      total_tax: "totalTax",
+      weight_unit: "weightUnit",
+      from_address: "fromAddress",
+      to_address: "toAddress",
+      line_items: "lineItems",
+      object_id: "objectId",
+      object_owner: "objectOwner",
+      shop_app: "shopApp",
     });
   });
 
@@ -193,7 +194,7 @@ export type Order$Outbound = {
   weight?: string | undefined;
   weight_unit?: string | undefined;
   from_address?: Address$Outbound | undefined;
-  to_address: Address$Outbound;
+  to_address?: Address$Outbound | undefined;
   line_items?: Array<LineItem$Outbound> | undefined;
   object_id?: string | undefined;
   object_owner?: string | undefined;
@@ -206,47 +207,49 @@ export const Order$outboundSchema: z.ZodType<
   Order$Outbound,
   z.ZodTypeDef,
   Order
-> = z.object({
-  currency: z.string().optional(),
-  notes: z.string().optional(),
-  orderNumber: z.string().optional(),
-  orderStatus: OrderStatusEnum$outboundSchema.optional(),
-  placedAt: z.string(),
-  shippingCost: z.string().optional(),
-  shippingCostCurrency: z.string().optional(),
-  shippingMethod: z.string().optional(),
-  subtotalPrice: z.string().optional(),
-  totalPrice: z.string().optional(),
-  totalTax: z.string().optional(),
-  weight: z.string().optional(),
-  weightUnit: WeightUnitEnum$outboundSchema.optional(),
-  fromAddress: Address$outboundSchema.optional(),
-  toAddress: Address$outboundSchema,
-  lineItems: z.array(LineItem$outboundSchema).optional(),
-  objectId: z.string().optional(),
-  objectOwner: z.string().optional(),
-  shopApp: OrderShopAppEnum$outboundSchema.optional(),
-  transactions: z.array(z.string()).optional(),
-}).transform((v) => {
-  return remap$(v, {
-    orderNumber: "order_number",
-    orderStatus: "order_status",
-    placedAt: "placed_at",
-    shippingCost: "shipping_cost",
-    shippingCostCurrency: "shipping_cost_currency",
-    shippingMethod: "shipping_method",
-    subtotalPrice: "subtotal_price",
-    totalPrice: "total_price",
-    totalTax: "total_tax",
-    weightUnit: "weight_unit",
-    fromAddress: "from_address",
-    toAddress: "to_address",
-    lineItems: "line_items",
-    objectId: "object_id",
-    objectOwner: "object_owner",
-    shopApp: "shop_app",
+> = z
+  .object({
+    currency: z.string().optional(),
+    notes: z.string().optional(),
+    orderNumber: z.string().optional(),
+    orderStatus: OrderStatusEnum$outboundSchema.optional(),
+    placedAt: z.string(),
+    shippingCost: z.string().optional(),
+    shippingCostCurrency: z.string().optional(),
+    shippingMethod: z.string().optional(),
+    subtotalPrice: z.string().optional(),
+    totalPrice: z.string().optional(),
+    totalTax: z.string().optional(),
+    weight: z.string().optional(),
+    weightUnit: WeightUnitEnum$outboundSchema.optional(),
+    fromAddress: Address$outboundSchema.optional(),
+    toAddress: Address$outboundSchema.optional(),
+    lineItems: z.array(LineItem$outboundSchema).optional(),
+    objectId: z.string().optional(),
+    objectOwner: z.string().optional(),
+    shopApp: OrderShopAppEnum$outboundSchema.optional(),
+    transactions: z.array(z.string()).optional(),
+  })
+  .transform((v) => {
+    return remap$(v, {
+      orderNumber: "order_number",
+      orderStatus: "order_status",
+      placedAt: "placed_at",
+      shippingCost: "shipping_cost",
+      shippingCostCurrency: "shipping_cost_currency",
+      shippingMethod: "shipping_method",
+      subtotalPrice: "subtotal_price",
+      totalPrice: "total_price",
+      totalTax: "total_tax",
+      weightUnit: "weight_unit",
+      fromAddress: "from_address",
+      toAddress: "to_address",
+      lineItems: "line_items",
+      objectId: "object_id",
+      objectOwner: "object_owner",
+      shopApp: "shop_app",
+    });
   });
-});
 
 /**
  * @internal
